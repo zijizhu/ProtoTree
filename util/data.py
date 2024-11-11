@@ -23,7 +23,7 @@ def get_data(args: argparse.Namespace):
     """
     if args.dataset =='CUB-200-2011':
         # return get_birds(True, './data/CUB_200_2011/dataset/train_corners', './data/CUB_200_2011/dataset/train_crop', './data/CUB_200_2011/dataset/test_full')
-        return get_birds(False, './datasets/cub200_augmented/train_augmented', './datasets/cub200_augmented/train_cropped', './datasets/cub200_augmented/test_cropped')
+        return get_birds(False, './datasets/cub200_cropped/train_augmented', './datasets/cub200_cropped/train_cropped', './datasets/cub200_cropped/test_cropped')
     if args.dataset == 'CARS':
         return get_cars(True, './data/cars/dataset/train', './data/cars/dataset/train', './data/cars/dataset/test')
     raise Exception(f'Could not load data set "{args.dataset}"!')
