@@ -1,5 +1,7 @@
 import argparse
 import torch.nn as nn
+from functools import partial
+from features.vit_features import DINOv2BackboneExpanded, DINOBackboneExpanded
 import torch.nn.functional as F
 from prototree.prototree import ProtoTree
 from util.log import Log
@@ -24,7 +26,13 @@ base_architecture_to_features = {'resnet18': resnet18_features,
                                  'vgg16': vgg16_features,
                                  'vgg16_bn': vgg16_bn_features,
                                  'vgg19': vgg19_features,
-                                 'vgg19_bn': vgg19_bn_features}
+                                 'vgg19_bn': vgg19_bn_features,
+                                 'dinov2_vits_exp': partial(DINOv2BackboneExpanded, name="dinov2_vits14_reg4", n_splits=3),
+                                 'dinov2_vitb_exp': partial(DINOv2BackboneExpanded, name="dinov2_vitb14_reg4", n_splits=3),
+                                 'dino_vits16': partial(DINOBackboneExpanded, name="dino_vits16", n_splits=3),
+                                 'dino_vits8': partial(DINOBackboneExpanded, name="dino_vits8", n_splits=3),
+                                 'dino_vitb16': partial(DINOBackboneExpanded, name="dino_vitb16", n_splits=3),
+                                 'dino_vitb8': partial(DINOBackboneExpanded, name="dino_vitb8", n_splits=3)}
 
 """
     Create network with pretrained features and 1x1 convolutional layer
@@ -57,6 +65,8 @@ def freeze(tree: ProtoTree, epoch: int, params_to_freeze: list, params_to_train:
                 parameter.requires_grad = False
         elif epoch == args.freeze_epochs + 1:
             log.log_message("\nNetwork unfrozen")
-            for parameter in params_to_freeze:
-                parameter.requires_grad = True
-
+            if 'dino' in str(tree._net):
+                tree._net.set_requires_grad()
+            else:
+                for parameter in params_to_freeze:
+                    parameter.requires_grad = True
