@@ -1,5 +1,6 @@
 from prototree.prototree import ProtoTree
 from util.log import Log
+from pathlib import Path
 
 from util.args import get_args, save_args, get_optimizer
 from util.data import get_dataloaders
@@ -21,6 +22,8 @@ from copy import deepcopy
 def run_tree(args=None):
     args = args or get_args()
     # Create a logger
+    Path(args.log_dir).mkdir(parents=True, exist_ok=True)
+
     log = Log(args.log_dir)
     print("Log dir: ", args.log_dir, flush=True)
     # Create a csv log for storing the test accuracy, mean train accuracy and mean loss for each epoch
