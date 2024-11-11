@@ -48,6 +48,10 @@ def get_network(num_in_channels: int, args: argparse.Namespace):
     elif features_name.startswith('DENSE'):
         first_add_on_layer_in_channels = \
             [i for i in features.modules() if isinstance(i, nn.BatchNorm2d)][-1].num_features
+    elif 'vits' in features_name.lower():
+        first_add_on_layer_in_channels = 384
+    elif 'vitb' in features_name.lower():
+        first_add_on_layer_in_channels = 768
     else:
         raise Exception('other base base_architecture NOT implemented')
     
